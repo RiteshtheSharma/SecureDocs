@@ -29,16 +29,17 @@ router.post(
     console.log(req.body);
     // validate email and pwd against constraints (if proper email format is followed and pwd 's length >=5 )
     const errors = validationResult(req);
+  
     // if there is errors in credentials return bad request and the errors
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+    
     // check whether the user with same email exists already
     try {
-    
+  
       let user = await User.findOne({ email: req.body.email })
-     
+      
       if (user) {
         return res
           .status(400)
@@ -52,15 +53,18 @@ router.post(
         email: req.body.email,
         password:HashedPwd,
         
-      });
+      }); 
+      
   // creating js object as payload in jwt 
 const data = {
   user:{id:user.id}
-}
+}   
+
+
 //genetating awt on the basis of signature and data
 const AUTH_TOKEN = jwt.sign(data, process.env.JWT_SECRET)
        res.json({AUTH_TOKEN});
-      
+             console.log("sucess\n\n\n");
     } catch (err) {
       console.log("error :( ->\n", err.message);
       res.status(500).json({ errors: "some error occured" });
